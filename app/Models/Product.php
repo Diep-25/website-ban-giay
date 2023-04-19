@@ -24,4 +24,13 @@ class Product extends Model
         'thumbnail',
         'slug'
     ];
+
+    public function size()
+    {
+        return $this->hasMany(Size::class , 'product_id');
+    }
+    public function color()
+    {
+        return $this->hasMany(Color::class , 'product_id');
+    }
 }

@@ -84,41 +84,24 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('color');
             $table->string('image');
-            $table->timestamps();
-            $table->softDeletes();
-        });
-        //----------------------------
-
-        Schema::create('product_color', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('color_id');
             $table->unsignedBigInteger('product_id');
             $table->timestamps();
             $table->softDeletes();
-             // khoa ngoai
-             $table->foreign('color_id')->references('id')->on('colors');
-             $table->foreign('product_id')->references('id')->on('products');
+            // khoa ngoai
+            $table->foreign('product_id')->references('id')->on('products');
         });
         //----------------------------
 
         Schema::create('size', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('size');
-            $table->timestamps();
-            $table->softDeletes();
-        });
-        //----------------------------
-
-        Schema::create('product_size', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('size_id');
             $table->unsignedBigInteger('product_id');
             $table->timestamps();
             $table->softDeletes();
-             // khoa ngoai
-             $table->foreign('size_id')->references('id')->on('size');
-             $table->foreign('product_id')->references('id')->on('products');
+            // khoa ngoai
+            $table->foreign('product_id')->references('id')->on('products');
         });
+        
 
         //----------------------------
 
@@ -210,9 +193,7 @@ return new class extends Migration
         Schema::dropIfExists('categories');
         Schema::dropIfExists('products');
         Schema::dropIfExists('colors');
-        Schema::dropIfExists('product_color');
         Schema::dropIfExists('size');
-        Schema::dropIfExists('product_size');
         Schema::dropIfExists('roles');
         Schema::dropIfExists('role_user');
         Schema::dropIfExists('discounts');
