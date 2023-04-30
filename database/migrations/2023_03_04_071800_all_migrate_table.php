@@ -145,6 +145,8 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('phone');
             $table->string('email');
+            $table->string('address');
+            $table->text('note')->nullable();;
             $table->timestamps();
             $table->softDeletes();
             
@@ -157,6 +159,9 @@ return new class extends Migration
             $table->unsignedBigInteger('oder_address_id');
             $table->string('payment_status');
             $table->string('status');
+            $table->string('total_order');
+            $table->string('shipping_price');
+            $table->string('total_order_not_shipping');
             $table->timestamps();
             $table->softDeletes();
              // khoa ngoai
@@ -175,6 +180,39 @@ return new class extends Migration
              // khoa ngoai
              $table->foreign('oder_id')->references('id')->on('oders');
              $table->foreign('product_id')->references('id')->on('products');
+        });
+
+        Schema::create('provinces', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->unsignedBigInteger('code');
+            $table->string('division_type');
+            $table->string('codename');
+            $table->unsignedBigInteger('phone_code');
+            $table->json('districts');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+        Schema::create('districts', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->unsignedBigInteger('code');
+            $table->string('division_type');
+            $table->string('codename');
+            $table->unsignedBigInteger('province_code');
+            $table->json('wards');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+        Schema::create('wards', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->unsignedBigInteger('code');
+            $table->string('division_type');
+            $table->string('codename');
+            $table->unsignedBigInteger('district_code');
+            $table->timestamps();
+            $table->softDeletes();
         });
         
     }
@@ -200,5 +238,8 @@ return new class extends Migration
         Schema::dropIfExists('oder_address');
         Schema::dropIfExists('oders');
         Schema::dropIfExists('product_oder');
+        Schema::dropIfExists('provinces');
+        Schema::dropIfExists('districts');
+        Schema::dropIfExists('wards');
     }
 };

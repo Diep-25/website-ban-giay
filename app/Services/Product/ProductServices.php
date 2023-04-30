@@ -28,11 +28,25 @@ class ProductServices {
         DB::beginTransaction();
         try {
             $data = $this->productRepository->index();
-            $response = [
-                'product' => $data,
-            ];  
+            // $response = [
+            //     ,
+            // ];  
             DB::commit();
-            return response()->json($response,200);
+            return response()->json($data,200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $response = [
+                'error' => "Get data failed",
+            ];
+            return response()->json($response,403);
+        }
+    }
+    public function fillter (array $data) {
+        DB::beginTransaction();
+        try {
+            $data = $this->productRepository->fillter($data);  
+            DB::commit();
+            return response()->json($data,200);
         } catch (\Exception $e) {
             DB::rollBack();
             $response = [
@@ -45,11 +59,11 @@ class ProductServices {
         DB::beginTransaction();
         try {
             $data = $this->productRepository->getById($id);
-            $response = [
-                'product' => $data,
-            ];  
+            // $response = [
+            //     'products' => $data,
+            // ];  
             DB::commit();
-            return response()->json($response,200);
+            return response()->json($data,200);
         } catch (\Exception $e) {
             DB::rollBack();
             $response = [
@@ -91,7 +105,7 @@ class ProductServices {
             $datas->size;
             $datas->color;
             $response = [
-                'product' => $datas,
+                'products' => $datas,
             ];
             return response()->json($response,200);
         } catch (\Exception $e) {

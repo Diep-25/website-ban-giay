@@ -19,11 +19,44 @@ class ProductRepository {
     }
     public function index () 
     {
-        return $this->product->with('size','color')->get();
+        return $this->product->with('size','options')->get();
+    }
+    public function fillter (array $data) 
+    {
+        if(isset($data['search'])) 
+        {
+            return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('name', 'like', '%' . $data['search'] . '%')->get();
+        }
+        if(isset($data['_sort']) && !isset($data['price_lte']) && !isset($data['price_gte'])){
+            return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->orderBy($data['_sort'],$data['_order'])->get();
+        } else if(isset($data['_sort']) && isset($data['price_lte']) || isset($data['price_gte'])) {
+
+            if(isset($data['price_lte']) && !isset($data['price_gte'])) {
+                return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','<' , $data['price_lte'])->orderBy($data['_sort'],$data['_order'])->get();
+            } else if (!isset($data['price_lte']) && isset($data['price_gte'])) {
+                return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','>=' , $data['price_gte'])->orderBy($data['_sort'],$data['_order'])->get();
+            } else if (isset($data['price_lte']) && isset($data['price_gte'])) {
+                return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','>=' , $data['price_gte'])->where('price','<' , $data['price_lte'])->orderBy($data['_sort'],$data['_order'])->get();
+            }
+
+        } else {
+
+            if(isset($data['price_lte']) && !isset($data['price_gte'])) {
+                return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','<' , $data['price_lte'])->get();
+            } else if (!isset($data['price_lte']) && isset($data['price_gte'])) {
+                return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','>=' , $data['price_gte'])->get();
+            } else if (isset($data['price_lte']) && isset($data['price_gte'])) {
+                return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','>=' , $data['price_gte'])->where('price','<' , $data['price_lte'])->get();
+            }
+            
+        }
+        return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->get();
+        
+        
     }
     public function getById ($id) 
     {
-        return $this->product->with('size','color')->where('id',$id)->first();
+        return $this->product->with('size','options')->where('id',$id)->first();
     }
     public function create (array $data) 
     {
