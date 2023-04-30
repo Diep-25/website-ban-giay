@@ -2,9 +2,12 @@
 
 namespace App\Services\User;
 
+use App\Models\RoleUser;
+use App\Models\User;
 use App\Repository\User\UserRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserServices {
     private $userRepository;
@@ -22,6 +25,11 @@ class UserServices {
         DB::beginTransaction();
         try {
             $data = $this->userRepository->create($data);
+            $roleUser = [
+                'role_id' => 2,
+                'user_id' => $data->id
+            ];
+            RoleUser::create($roleUser);
             DB::commit();
             $response = [
                 'user' => $data,

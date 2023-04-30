@@ -24,6 +24,11 @@ class ProductController extends Controller
         return $this->productServices->index();
     }
 
+    public function fillter(Request  $request)
+    {
+        return $this->productServices->fillter($request->all());
+    }
+
     /**
      * Store a newly created resource in storage.
      *

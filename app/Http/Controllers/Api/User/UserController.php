@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use App\Models\User;
 use App\Services\User\UserServices;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
 {
@@ -14,16 +17,6 @@ class UserController extends Controller
     {
         $this->userService = $userService;
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -35,37 +28,23 @@ class UserController extends Controller
         return $this->userService->create($request->all());
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+    public function login(Request $request)
+    {  
+        $email = $request->email;
+        $password = $request->password;
+        $user = User::where('email', $email)->first();
+        if (!Hash::check($password, $user->password)) {
+            $response = [
+                'message' => 'password incorrect',
+            ];
+            return response()->json($response,403);
+        } 
+        $token = JWTAuth::fromUser($user);
+        $user->Roles;     
+        $response = [  
+            'token' =>  $token,   
+            'user' => $user
+        ];
+        return response()->json($response,200);
     }
 }
