@@ -29,26 +29,28 @@ class ProductRepository {
         }
         if(isset($data['_sort']) && !isset($data['price_lte']) && !isset($data['price_gte'])){
             return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->orderBy($data['_sort'],$data['_order'])->get();
-        } else if(isset($data['_sort']) && isset($data['price_lte']) || isset($data['price_gte'])) {
-
-            if(isset($data['price_lte']) && !isset($data['price_gte'])) {
-                return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','<' , $data['price_lte'])->orderBy($data['_sort'],$data['_order'])->get();
-            } else if (!isset($data['price_lte']) && isset($data['price_gte'])) {
-                return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','>=' , $data['price_gte'])->orderBy($data['_sort'],$data['_order'])->get();
-            } else if (isset($data['price_lte']) && isset($data['price_gte'])) {
-                return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','>=' , $data['price_gte'])->where('price','<' , $data['price_lte'])->orderBy($data['_sort'],$data['_order'])->get();
-            }
-
-        } else {
-
-            if(isset($data['price_lte']) && !isset($data['price_gte'])) {
-                return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','<' , $data['price_lte'])->get();
-            } else if (!isset($data['price_lte']) && isset($data['price_gte'])) {
-                return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','>=' , $data['price_gte'])->get();
-            } else if (isset($data['price_lte']) && isset($data['price_gte'])) {
-                return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','>=' , $data['price_gte'])->where('price','<' , $data['price_lte'])->get();
+        }  else if (!isset($data['_sort'])){
+            if(isset($data['price_lte']) || isset($data['price_gte'])) {
+                if(isset($data['price_lte']) && !isset($data['price_gte'])) {
+                    return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','<' , $data['price_lte'])->get();
+                } else if (!isset($data['price_lte']) && isset($data['price_gte'])) {
+                    return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','>=' , $data['price_gte'])->get();
+                } else if (isset($data['price_lte']) && isset($data['price_gte'])) {
+                    return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','>=' , $data['price_gte'])->where('price','<' , $data['price_lte'])->get();
+                }
             }
             
+        }else if(isset($data['_sort'])) {
+            if(isset($data['price_lte']) || isset($data['price_gte'])) {
+                if(isset($data['price_lte']) && !isset($data['price_gte'])) {
+                    return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','<' , $data['price_lte'])->orderBy($data['_sort'],$data['_order'])->get();
+                } else if (!isset($data['price_lte']) && isset($data['price_gte'])) {
+                    return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','>=' , $data['price_gte'])->orderBy($data['_sort'],$data['_order'])->get();
+                } else if (isset($data['price_lte']) && isset($data['price_gte'])) {
+                    return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->where('price','>=' , $data['price_gte'])->where('price','<' , $data['price_lte'])->orderBy($data['_sort'],$data['_order'])->get();
+                }
+            }
+
         }
         return $this->product->with('size','options')->forPage($data['_page'],$data['_limit'])->get();
         

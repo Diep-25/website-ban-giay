@@ -12,7 +12,11 @@ class Oders extends Model
     protected $fillable = [
         'user_id',
         'oder_address_id',
+        'shipping_price',
         'payment_status',
-        'status'
+        'status',
+        'total_order',
+        'shipping_price',
+        'total_order_not_shipping'
     ];
 }

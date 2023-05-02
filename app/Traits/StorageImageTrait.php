@@ -1,12 +1,17 @@
-<?php 
+<?php
+
 namespace App\Traits;
 
-trait StorageImageTrait {
-    public function uploadImage($file , $folder)
+use Illuminate\Support\Str;
+
+trait StorageImageTrait
+{
+    public function uploadImage($file, $folder)
     {
-            $imageName = time().'.'.$file->extension();
-            $file->move(public_path($folder), $imageName);  
-            return $imageName;
+        $random = Str::random(10);
+        $imageName = time(). '-' . $random . '.' . $file->extension();
+        $file->move(public_path($folder), $imageName);
+        return $imageName;
     }
     public function deleteImage($pathImage)
     {
