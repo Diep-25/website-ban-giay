@@ -15,6 +15,7 @@ class Product extends Model
         'category_id',
         'user_id',
         'price',
+        'import_total',
         'description',
         'discountpercentage',
         'rating',

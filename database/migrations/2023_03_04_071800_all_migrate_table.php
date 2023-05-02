@@ -62,7 +62,8 @@ return new class extends Migration
             $table->string('name');    
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('user_id');
-            $table->string('price');
+            $table->integer('price');
+            $table->integer('import_total');
             $table->string('description')->nullable();
             $table->string('discountpercentage')->nullable();
             $table->string('rating')->nullable();
@@ -141,12 +142,10 @@ return new class extends Migration
 
         Schema::create('oder_address', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('phone');
-            $table->string('email');
+            $table->string('full_name');
+            $table->string('phone_number');
             $table->string('address');
-            $table->text('note')->nullable();;
+            $table->text('note')->nullable();
             $table->timestamps();
             $table->softDeletes();
             
@@ -158,6 +157,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('oder_address_id');
             $table->string('payment_status');
+            $table->string('shipping_price');
             $table->string('status');
             $table->string('total_order');
             $table->string('shipping_price');
@@ -189,7 +189,6 @@ return new class extends Migration
             $table->string('division_type');
             $table->string('codename');
             $table->unsignedBigInteger('phone_code');
-            $table->json('districts');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -200,7 +199,6 @@ return new class extends Migration
             $table->string('division_type');
             $table->string('codename');
             $table->unsignedBigInteger('province_code');
-            $table->json('wards');
             $table->timestamps();
             $table->softDeletes();
         });

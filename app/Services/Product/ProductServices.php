@@ -7,6 +7,7 @@ use App\Repository\Product\ProductRepository;
 use App\Repository\Size\SizeRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use App\Traits\StorageImageTrait;
 
 class ProductServices {
@@ -79,6 +80,7 @@ class ProductServices {
             $data['slug'] = Str::slug($data['name']);
             $imageName = $this->uploadImage($data['thumbnail'] , 'product'); 
             $data['thumbnail'] = $imageName;
+            $data['user_id'] = Auth::user()->id;
             $datas = $this->productRepository->create($data);
             if(isset($data['size'])) {
                 foreach ($data['size'] as $sizes) {
@@ -89,21 +91,17 @@ class ProductServices {
                     $this->sizeRepository->create($size);
                 }
             }
-            if (isset($data['color']) && isset($data['color_image'])) {
-                for($i = 0 ; $i < count($data['color']) ; $i++) {
-                    $imageNameColor = $this->uploadImage($data['color_image'][$i] , 'color'); 
-                    $imageColor = $imageNameColor;
-                    $color = [
-                        'color' => $data['color'][$i],
-                        'image' => $imageColor,
-                        'product_id' => $datas->id
-                    ];
-                    $this->colorRepository->create($color);
+            if (isset($data['options'])) {
+                for($i = 0 ; $i < count($data['options']) ; $i++) {
+                    $imageNameColor = $this->uploadImage($data['options'][$i]["image"] , 'color'); 
+                    $data['options'][$i]["product_id"] = $datas->id;
+                    $data['options'][$i]["image"] = $imageNameColor;
+                    $this->colorRepository->create($data['options'][$i]);
                 }
             }
             DB::commit();
             $datas->size;
-            $datas->color;
+            $datas->options;
             $response = [
                 'products' => $datas,
             ];

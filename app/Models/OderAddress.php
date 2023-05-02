@@ -10,10 +10,8 @@ class OderAddress extends Model
     use HasFactory;
     protected $table = 'oder_address';
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'phone',
-        'email',
+        'full_name',
+        'phone_number',
         'address',
         'note'
     ];
